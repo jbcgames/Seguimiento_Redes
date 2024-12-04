@@ -80,7 +80,3 @@ Siéntete libre de experimentar con estos parámetros para observar diferentes c
 - **Bibliotecas Faltantes**: Si encuentras errores relacionados con bibliotecas faltantes, asegúrate de que todos los paquetes necesarios estén instalados usando el comando `pip install` proporcionado arriba.
 - **Problemas de Permisos**: Si el script no puede crear o escribir en la carpeta `Resultados`, asegúrate de tener los permisos adecuados o crea la carpeta manualmente.
 
-## Licencia
-
-Siéntete libre de usar, modificar y distribuir este script según sea necesario para propósitos educativos y de investigación.
-
