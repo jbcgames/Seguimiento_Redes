@@ -58,10 +58,9 @@ class TCPBase:
         throughput = self.acknowledged_packets / self.env.now if self.env.now > 0 else 0
 
         return {
+            "Name": self.name,
             "Utilization": utilization,
             "Packet Loss Rate": packet_loss_rate,
-            "Average Delay": avg_delay,
-            "Delay Stability": delay_stability,
             "Throughput": throughput,
         }
 
@@ -117,6 +116,8 @@ class TCPBBR(TCPBase):
         # In BBR, packet loss does not directly affect the window size as in Reno or Tahoe
 
 # Running multiple simulations with different packet loss frequencies
+all_metrics = []
+
 for loss_frequency in range(1, 26):  # Varying loss frequency from 1 to 25
     env = simpy.Environment()
 
@@ -127,6 +128,12 @@ for loss_frequency in range(1, 26):  # Varying loss frequency from 1 to 25
 
     # Running the simulation
     env.run(until=50)
+
+    # Collecting metrics for each TCP algorithm
+    for tcp in [tcp_tahoe, tcp_reno, tcp_bbr]:
+        metrics = tcp.get_metrics()
+        metrics["Loss Frequency"] = loss_frequency
+        all_metrics.append(metrics)
 
     # Plotting results with assigned colors and saving each figure
     tcp_algorithms = [tcp_tahoe, tcp_reno, tcp_bbr]
@@ -162,3 +169,8 @@ for loss_frequency in range(1, 26):  # Varying loss frequency from 1 to 25
     # Saving each figure to an image file in the "Resultados" folder
     plt.savefig(f'Resultados/tcp_simulation_results_loss_frequency_{loss_frequency}.png')
     plt.close()
+
+# Saving metrics to an Excel file
+metrics_df = pd.DataFrame(all_metrics)
+metrics_df.to_excel('Resultados/tcp_simulation_metrics.xlsx', index=False)
+print("Simulation metrics saved to 'Resultados/tcp_simulation_metrics.xlsx'")
